@@ -28,18 +28,4 @@ Unlock the digital secrets of your target systems with SysDig! 🚀
 - Watch the magic happen.
 - Grab your intel securely..
 
-### 🙌 Contribution
-
-🐛 Found a bug or want to supercharge it? Open an issue or PR!
-
-### ⚖️ Legal Disclaimer
-
-Use it responsibly and legally. Respect privacy and security.
-
-### 🕶️ Credits
-
-Script crafted by [@pwnjack](https://github.com/yourusername).
-
-### 📄 License
-
-MIT License
+### 💲 Profit
