@@ -2,7 +2,7 @@
 
 A collection of Sec Tools.
 
-- SysDig [sysdig.sh](https://github.com/pwnjack/sec-tools/blob/main/SysDig/sysdig.sh)
+- SysDig ([sysdig.sh](https://github.com/pwnjack/sec-tools/tree/main/SysDig))
 - [more coming...]
 
 ## 🙌 Contribution
