@@ -93,17 +93,16 @@ gather_info() {
         echo $PS1
         echo $PS2
         echo $TERM
-    } > "system_info_$1.txt"
-
-    if [ "$search_flag" = true ]; then
-        search_keyword $1
-    fi
+        if [ "$search_flag" = true ]; then
+            search_keyword $1
+        fi
+    } >> "system_info_$1.txt"
 }
 
 # Function to search for keyword in files
 search_keyword() {
     echo "Searching for '$keyword' in files..."
-    grep -r "$keyword" / > "keyword_results_$1.txt"
+    grep -r "$keyword" / >> "system_info_$1.txt"
     echo "Search complete."
 }
 
