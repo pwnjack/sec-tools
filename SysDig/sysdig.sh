@@ -8,17 +8,32 @@ hosts=(
     "host3"
 )
 
-# Prompt for encryption key
-read -p "Enter encryption key: " encryption_key
+# SSH key file path (update this with your SSH key file)
+ssh_key="/path/to/your/ssh/key"
 
-# Prompt for server information
+# Prompt for encryption key with validation
+read -p "Enter encryption key: " -s encryption_key
+if [ -z "$encryption_key" ]; then
+    echo "Error: Encryption key cannot be empty."
+    exit 1
+fi
+echo
+
+# Prompt for server information with validation
 read -p "Enter server (user@your_server:/path/to/save/): " server
+if [ -z "$server" ]; then
+    echo "Error: Server information cannot be empty."
+    exit 1
+fi
 
 # Set to true to perform keyword search
 read -p "Perform keyword search? (true/false): " search_flag
-
 if [[ "$search_flag" == "true" ]]; then
     read -p "Enter keyword for search: " keyword
+    if [ -z "$keyword" ]; then
+        echo "Error: Keyword cannot be empty."
+        exit 1
+    fi
 fi
 
 # Log file path
@@ -115,20 +130,24 @@ do
     echo "Connecting to $host..."
 
     # Try to connect via SSH and gather information
-    if ssh "$host" "$(typeset -f gather_info search_keyword); gather_info $host"; then
+    if ssh -o ConnectTimeout=10 -i "$ssh_key" "$server" "$(typeset -f gather_info search_keyword); gather_info $host"; then
         log "Connected to $host successfully."
         
         # Encrypt the file using openssl
         openssl enc -aes-256-cbc -salt -in "system_info_$host.txt" -out "system_info_$host.enc" -k "$encryption_key"
         
         # Send the encrypted file back (using SCP)
-        scp "system_info_$host.enc" "$server"
+        scp -i "$ssh_key" "system_info_$host.enc" "$server"
 
         # Clean up temporary files
-        rm "system_info_$host.txt"
-        rm "system_info_$host.enc"
+        if [ -f "system_info_$host.txt" ]; then
+            rm "system_info_$host.txt"
+        fi
+        if [ -f "system_info_$host.enc" ]; then
+            rm "system_info_$host.enc"
+        fi
     else
-        log "Failed to connect to $host."
+        log "Failed to connect to $host. Check host availability and SSH configuration."
         # Continue to the next host
         continue
     fi
