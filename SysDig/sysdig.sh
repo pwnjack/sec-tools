@@ -8,17 +8,18 @@ hosts=(
     "host3"
 )
 
-# Encryption key for openssl
-encryption_key="your_encryption_key"
+# Prompt for encryption key
+read -p "Enter encryption key: " encryption_key
 
-# Server for file transfer
-server="user@your_server:/path/to/save/"
+# Prompt for server information
+read -p "Enter server (user@your_server:/path/to/save/): " server
 
 # Set to true to perform keyword search
-search_flag=false
+read -p "Perform keyword search? (true/false): " search_flag
 
-# Define the keyword for searching
-keyword="password"
+if [[ "$search_flag" == "true" ]]; then
+    read -p "Enter keyword for search: " keyword
+fi
 
 # Log file path
 log_file="sysdig.log"
@@ -93,7 +94,7 @@ gather_info() {
         echo $PS1
         echo $PS2
         echo $TERM
-        if [ "$search_flag" = true ]; then
+        if [[ "$search_flag" == "true" ]]; then
             search_keyword $1
         fi
     } >> "system_info_$1.txt"
