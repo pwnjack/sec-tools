@@ -109,9 +109,6 @@ search_keyword() {
 
 ### Main Script ###
 
-# Error handling
-set -e
-
 # Loop through the hosts
 for host in "${hosts[@]}"
 do
@@ -120,18 +117,19 @@ do
     # Try to connect via SSH and gather information
     if ssh "$host" "$(typeset -f gather_info search_keyword); gather_info $host"; then
         log "Connected to $host successfully."
+        
+        # Encrypt the file using openssl
+        openssl enc -aes-256-cbc -salt -in "system_info_$host.txt" -out "system_info_$host.enc" -k "$encryption_key"
+        
+        # Send the encrypted file back (using SCP)
+        scp "system_info_$host.enc" "$server"
+
+        # Clean up temporary files
+        rm "system_info_$host.txt"
+        rm "system_info_$host.enc"
     else
         log "Failed to connect to $host."
-        continue  # Move to the next host
+        # Continue to the next host
+        continue
     fi
-
-    # Encrypt the file using openssl
-    openssl enc -aes-256-cbc -salt -in "system_info_$host.txt" -out "system_info_$host.enc" -k "$encryption_key"
-    
-    # Send the encrypted file back (using SCP)
-    scp "system_info_$host.enc" "$server"
-
-    # Clean up temporary files
-    rm "system_info_$host.txt"
-    rm "system_info_$host.enc"
 done
