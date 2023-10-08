@@ -41,6 +41,19 @@ log_file="sysdig.log"
 
 ### Functions ###
 
+# Function to clean up temporary files
+cleanup() {
+    if [ -f "system_info_$host.txt" ]; then
+        rm "system_info_$host.txt"
+    fi
+    if [ -f "system_info_$host.enc" ]; then
+        rm "system_info_$host.enc"
+    fi
+}
+
+# Set up trap to ensure cleanup on script exit
+trap cleanup EXIT
+
 # Function to log messages
 log() {
     echo "$(date '+%Y-%m-%d %H:%M:%S') - $1" >> "$log_file"
