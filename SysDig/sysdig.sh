@@ -11,13 +11,39 @@ hosts=(
 # SSH key file path (update this with your SSH key file)
 ssh_key="/path/to/your/ssh/key"
 
+# Function to check SSH key permissions
+check_ssh_key() {
+    if [ ! -f "$ssh_key" ]; then
+        echo "Error: SSH key file not found at '$ssh_key'."
+        exit 1
+    fi
+    
+    # Check if the SSH key file has correct permissions (600 or 400)
+    local permissions=$(stat -c %a "$ssh_key")
+    if [ "$permissions" != "600" ] && [ "$permissions" != "400" ]; then
+        echo "Error: SSH key file '$ssh_key' should have permissions 600 or 400."
+        exit 1
+    fi
+}
+
 # Prompt for encryption key with validation
-read -p "Enter encryption key: " -s encryption_key
+while true; do
+    read -p "Enter encryption key: " -s encryption_key
+    echo
+    read -p "Confirm encryption key: " -s confirm_key
+    echo
+
+    if [ "$encryption_key" == "$confirm_key" ]; then
+        break
+    else
+        echo "Error: Encryption keys do not match. Please try again."
+    fi
+done
+
 if [ -z "$encryption_key" ]; then
     echo "Error: Encryption key cannot be empty."
     exit 1
 fi
-echo
 
 # Prompt for server information with validation
 read -p "Enter server (user@your_server:/path/to/save/): " server
@@ -38,8 +64,6 @@ fi
 
 # Log file path
 log_file="sysdig.log"
-
-### Functions ###
 
 # Function to clean up temporary files
 cleanup() {
@@ -135,7 +159,27 @@ search_keyword() {
     echo "Search complete."
 }
 
+# Function to attempt SSH connection
+ssh_connect() {
+    local host=$1
+    local attempts=0
+    
+    while [ $attempts -lt 3 ]; do
+        if ssh -o ConnectTimeout=10 -i "$ssh_key" "$server" "$(typeset -f gather_info search_keyword); gather_info $host"; then
+            return 0
+        else
+            let attempts++
+            sleep 5
+        fi
+    done
+    
+    return 1
+}
+
 ### Main Script ###
+
+# Check SSH key permissions
+check_ssh_key
 
 # Loop through the hosts
 for host in "${hosts[@]}"
@@ -143,7 +187,7 @@ do
     echo "Connecting to $host..."
 
     # Try to connect via SSH and gather information
-    if ssh -o ConnectTimeout=10 -i "$ssh_key" "$server" "$(typeset -f gather_info search_keyword); gather_info $host"; then
+    if ssh_connect "$host"; then
         log "Connected to $host successfully."
         
         # Encrypt the file using openssl
@@ -151,14 +195,6 @@ do
         
         # Send the encrypted file back (using SCP)
         scp -i "$ssh_key" "system_info_$host.enc" "$server"
-
-        # Clean up temporary files
-        if [ -f "system_info_$host.txt" ]; then
-            rm "system_info_$host.txt"
-        fi
-        if [ -f "system_info_$host.enc" ]; then
-            rm "system_info_$host.enc"
-        fi
     else
         log "Failed to connect to $host. Check host availability and SSH configuration."
         # Continue to the next host
