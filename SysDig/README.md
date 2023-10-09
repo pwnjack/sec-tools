@@ -32,7 +32,6 @@ When you run the script, you will be prompted for the following information:
 
 ### Usage
 
-- Ensure your SSH key has appropriate permissions.
 - Execute the script.
 - Observe the script in action.
 - Retrieve your gathered information securely.
