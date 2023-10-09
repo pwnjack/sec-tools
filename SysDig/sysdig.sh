@@ -11,6 +11,9 @@ hosts=(
 # SSH key file path (update this with your SSH key file)
 ssh_key="/path/to/your/ssh/key"
 
+# Log file path
+log_file="sysdig.log"
+
 # Function to check SSH key permissions
 check_ssh_key() {
     if [ ! -f "$ssh_key" ]; then
@@ -61,9 +64,6 @@ if [[ "$search_flag" == "true" ]]; then
         exit 1
     fi
 fi
-
-# Log file path
-log_file="sysdig.log"
 
 # Function to clean up temporary files
 cleanup() {
