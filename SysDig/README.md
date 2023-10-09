@@ -1,41 +1,38 @@
-## 🕵️‍♂️ SysDig
+## SysDig: Multi-Host Reconnaissance Tool
 
-Unlock the digital secrets of your target systems with SysDig! 🚀
+SysDig is a powerful tool for conducting reconnaissance on multiple hosts. It offers features such as encryption for secure data transfer and optional keyword search capabilities.
 
-### 🔍 Features
+### Features
 
-- **Multi-Host Recon**: Hit multiple targets like a boss.
-- **Top-Secret Encryption**: Keep your findings locked down tight.
-- **Keyword Kung Fu**: Optional keyword hunt for hidden treasures
-- **SSH Key Verification**: Ensures your SSH key is properly set up for secure connections.
+- **Multi-Host Reconnaissance**: Easily target and gather information from multiple hosts.
+- **Encryption**: Keep sensitive data secure with robust encryption.
+- **Keyword Search**: Optionally, perform in-depth searches for specific keywords.
 
-### 🚀 Getting Started
+### Getting Started
 
-1. Clone the repo.
-2. Open `sysdig.sh` in a text editor.
-3. Tweak the following variables:
+1. Clone the repository.
+2. Open `sysdig.sh` in your preferred text editor.
+3. Adjust the following variables to suit your needs:
 
-   - `hosts`: List of your target hosts.
-   - `ssh_key`: Set the path to your SSH key file.
-   - `log_file`: Path to the log file for recording events.
+   - `hosts`: List of target hosts.
+   - `ssh_key`: Path to your SSH key file.
+   - `log_file`: Path for recording script events.
 
 4. Save the file.
 
-### 🔧 Configuration
+### Configuration
 
-When you run the script, you'll be prompted for the following information:
+When you run the script, you will be prompted for the following information:
 
-- **Encryption Key**: Enter your encryption key. It will be hidden for security.
-- **Confirm Encryption Key**: Confirm your encryption key by entering it again.
+- **Cipher Key**: Enter your encryption key.
+- **Confirm Cipher Key**: Confirm your encryption key.
 - **Server Information**: Provide the server details in the format `user@your_server:/path/to/save/`.
-- **Perform Keyword Search?**: Answer with `true` or `false` to toggle keyword search.
-- **Keyword for Search**: If you chose to perform a keyword search, enter the keyword.
+- **Initiate Keyword Search?**: Answer with `true` or `false` to enable or disable keyword search.
+- **Keyword for Search**: If enabled, enter the keyword.
 
-### 🛡️ Usage
+### Usage
 
-- Ensure you have the necessary permissions set for your SSH key.
-- Run the script.
-- Watch the magic happen.
-- Grab your intel securely.
-
-### 💲 Profit
+- Ensure your SSH key has appropriate permissions.
+- Execute the script.
+- Observe the script in action.
+- Retrieve your gathered information securely.
