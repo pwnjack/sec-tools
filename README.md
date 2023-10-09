@@ -1,22 +1,22 @@
-# 🔓 Sec Tools
+# 🛡️ Cybersecurity Arsenal
 
-A collection of Sec Tools.
+Welcome to the Cybersecurity Arsenal, a curated collection of powerful tools designed to bolster your digital defenses.
 
-- SysDig ([sysdig.sh](https://github.com/pwnjack/sec-tools/tree/main/SysDig))
-- [more coming...]
+- **SysDig** - Dive deep into system secrets with [sysdig.sh](https://github.com/pwnjack/sec-tools/tree/main/SysDig).
+- [More Tools Coming Soon]
 
-## 🙌 Contribution
+## 🤝 Get Involved
 
-Found a bug or want to contribute? Open an issue or PR!
+Spot a bug or want to amplify the arsenal? Open an issue or pull request and join the ranks!
 
-## ⚖️ Legal Disclaimer
+## ⚖️ Legal Notice
 
-For educational and authorized testing purposes only. The author is not liable for any misuse or unauthorized access. Respect privacy and security. Use with responsibility.
+Exclusively for educational and authorized testing purposes. The author assumes no responsibility for unauthorized usage. Prioritize privacy and security. Wield with care.
 
-## 🕶️ Credits
+## 🕶️ Acknowledgments
 
-Scripts crafted by [@pwnjack](https://github.com/pwnjack).
+Tools forged by [@pwnjack](https://github.com/pwnjack).
 
-## 📄 License
+## 📃 License
 
 MIT License
