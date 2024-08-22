@@ -17,53 +17,59 @@ log_file="sysdig.log"
 # Function to check SSH key permissions
 check_ssh_key() {
     if [ ! -f "$ssh_key" ]; then
-        echo "Error: SSH key file not found at '$ssh_key'."
+        echo "Error: SSH key file not found at '$ssh_key'." | tee -a "$log_file"
         exit 1
     fi
     
     # Check if the SSH key file has correct permissions (600 or 400)
     local permissions=$(stat -c %a "$ssh_key")
     if [ "$permissions" != "600" ] && [ "$permissions" != "400" ]; then
-        echo "Error: SSH key file '$ssh_key' should have permissions 600 or 400."
+        echo "Error: SSH key file '$ssh_key' should have permissions 600 or 400." | tee -a "$log_file"
         exit 1
     fi
 }
 
 # Prompt for encryption key with validation
-while true; do
-    read -p "Enter encryption key: " -s encryption_key
-    echo
-    read -p "Confirm encryption key: " -s confirm_key
-    echo
+prompt_encryption_key() {
+    while true; do
+        read -p "Enter encryption key: " -s encryption_key
+        echo
+        read -p "Confirm encryption key: " -s confirm_key
+        echo
 
-    if [ "$encryption_key" == "$confirm_key" ]; then
-        break
-    else
-        echo "Error: Encryption keys do not match. Please try again."
-    fi
-done
+        if [ "$encryption_key" == "$confirm_key" ]; then
+            break
+        else
+            echo "Error: Encryption keys do not match. Please try again."
+        fi
+    done
 
-if [ -z "$encryption_key" ]; then
-    echo "Error: Encryption key cannot be empty."
-    exit 1
-fi
-
-# Prompt for server information with validation
-read -p "Enter server (user@your_server:/path/to/save/): " server
-if [ -z "$server" ]; then
-    echo "Error: Server information cannot be empty."
-    exit 1
-fi
-
-# Set to true to perform keyword search
-read -p "Perform keyword search? (true/false): " search_flag
-if [[ "$search_flag" == "true" ]]; then
-    read -p "Enter keyword for search: " keyword
-    if [ -z "$keyword" ]; then
-        echo "Error: Keyword cannot be empty."
+    if [ -z "$encryption_key" ]; then
+        echo "Error: Encryption key cannot be empty." | tee -a "$log_file"
         exit 1
     fi
-fi
+}
+
+# Prompt for server information with validation
+prompt_server_info() {
+    read -p "Enter server (user@your_server:/path/to/save/): " server
+    if [ -z "$server" ]; then
+        echo "Error: Server information cannot be empty." | tee -a "$log_file"
+        exit 1
+    fi
+}
+
+# Prompt for keyword search
+prompt_keyword_search() {
+    read -p "Perform keyword search? (true/false): " search_flag
+    if [[ "$search_flag" == "true" ]]; then
+        read -p "Enter keyword for search: " keyword
+        if [ -z "$keyword" ]; then
+            echo "Error: Keyword cannot be empty." | tee -a "$log_file"
+            exit 1
+        fi
+    fi
+}
 
 # Function to clean up temporary files
 cleanup() {
@@ -80,7 +86,7 @@ trap cleanup EXIT
 
 # Function to log messages
 log() {
-    echo "$(date '+%Y-%m-%d %H:%M:%S') - $1" >> "$log_file"
+    echo "$(date '+%Y-%m-%d %H:%M:%S') - $1" | tee -a "$log_file"
 }
 
 # Function to gather system information
@@ -180,6 +186,15 @@ ssh_connect() {
 
 # Check SSH key permissions
 check_ssh_key
+
+# Prompt for encryption key
+prompt_encryption_key
+
+# Prompt for server information
+prompt_server_info
+
+# Prompt for keyword search
+prompt_keyword_search
 
 # Loop through the hosts
 for host in "${hosts[@]}"
